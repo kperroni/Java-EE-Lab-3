@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="KennyWesleyManoel_Assignment3_EAR">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="KennyWesleyManoel_COMP303_Assignment3_WAR.war" deploy-path="/" handle="module:/resource/KennyWesleyManoel_COMP303_Assignment3_WAR/KennyWesleyManoel_COMP303_Assignment3_WAR">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="KennyWesleyManoel_Assignment3_JPA.jar" deploy-path="/lib" handle="module:/resource/KennyWesleyManoel_Assignment3_JPA/KennyWesleyManoel_Assignment3_JPA">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>
