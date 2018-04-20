@@ -9,12 +9,13 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@NamedQuery(name="Faq.findAll", query="SELECT f FROM Faq f")
+@NamedQuery(name="Faq.findAll", query="SELECT f FROM Faq f where f.id.topicId = :id")
 public class Faq implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
 	private FaqPK id;
+
 
 	private String answer;
 
@@ -59,5 +60,7 @@ public class Faq implements Serializable {
 	public void setTopic(Topic topic) {
 		this.topic = topic;
 	}
+	
+
 
 }

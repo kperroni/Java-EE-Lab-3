@@ -7,15 +7,18 @@ import java.util.List;
 
 /**
  * The persistent class for the topics database table.
- * 
+ * upper(topic_name) like upper("serv%")
  */
 @Entity
 @Table(name="topics")
-@NamedQuery(name="Topic.findAll", query="SELECT t FROM Topic t")
+//@NamedQuery(name="Topic.findAll", query="SELECT t FROM Topic t")
+@NamedQueries({@NamedQuery(name="Topic.findAll", query="SELECT t FROM Topic t"),
+			  @NamedQuery(name="Topic.query", query="SELECT t FROM Topic t where upper(t.topicName) like :topicName")})
 public class Topic implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	@Column(name="topic_id")
 	private int topicId;
 
