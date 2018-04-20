@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Faq;
 import model.Topic;
@@ -38,7 +39,6 @@ public class TopicController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -48,29 +48,25 @@ public class TopicController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Eclipselink_JPA");
 		em = emf.createEntityManager();
+		HttpSession session = request.getSession();
 
 		String value = request.getParameter("topic"); // parameter from the index.jsp
-		value = "%" + value.toUpperCase() + "%"; // transform the string 
+		value = "%" + value.toUpperCase() + "%"; // transform the string
 		Query q = em.createNamedQuery("Topic.query"); // query with Like and Upper
 		q.setParameter("topicName", value);
 		List<Topic> topics = q.getResultList(); // result of the query
 
 		if (q.getResultList() != null) {
 			for (Topic topic : topics) {
-				Query q2 = em.createNamedQuery("Faq.findAll"); // query to be be excuted according the setParameter
+				Query q2 = em.createNamedQuery("Faq.findAll"); // query to be be executed according to the setParameter
 				q2.setParameter("id", topic.getTopicId()); // pass the value from the first result
-				List<Faq> faqs = q2.getResultList(); // all final results are here, then this should be showed on the index.jsp
-				for (Faq faq : faqs) {
-					System.out.println(faq.getAnswer());
-				}
+				List<Faq> faqs = q2.getResultList(); // all final results are here, then this should be showed on the
+													// index.jsp
+				session.setAttribute("faqs", faqs);
+				request.getRequestDispatcher("index.jsp").forward(request, response);
 			}
-
 		}
-
 	}
-
 }
