@@ -29,7 +29,8 @@
 		<div class="col">Question</div>
 		<div class="col">Answer</div>
 	</div>
-	<c:forEach items="${sessionScope.faqs}" var="faq">
+	<span style="color: red;">${message}</span> <c:forEach items="${faqs}"
+		var="faq">
 		<div class="row">
 			<div class="col">${faq.getQuestion()}</div>
 			<div class="col">${faq.getAnswer()}</div>

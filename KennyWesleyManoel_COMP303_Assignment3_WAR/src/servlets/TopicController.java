@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -52,21 +53,30 @@ public class TopicController extends HttpServlet {
 		em = emf.createEntityManager();
 		HttpSession session = request.getSession();
 
-		String value = request.getParameter("topic"); // parameter from the index.jsp
-		value = "%" + value.toUpperCase() + "%"; // transform the string
+		String oldVal = request.getParameter("topic"); // parameter from the index.jsp
+		String value = "%" + oldVal.toUpperCase() + "%"; // transform the string
 		Query q = em.createNamedQuery("Topic.query"); // query with Like and Upper
-		q.setParameter("topicName", value);
-		List<Topic> topics = q.getResultList(); // result of the query
+		if (!oldVal.isEmpty()) {
+			q.setParameter("topicName", value);
+			List<Topic> topics = q.getResultList(); // result of the query
 
-		if (q.getResultList() != null) {
-			for (Topic topic : topics) {
-				Query q2 = em.createNamedQuery("Faq.findAll"); // query to be be executed according to the setParameter
-				q2.setParameter("id", topic.getTopicId()); // pass the value from the first result
-				List<Faq> faqs = q2.getResultList(); // all final results are here, then this should be showed on the
-													// index.jsp
-				session.setAttribute("faqs", faqs);
-				request.getRequestDispatcher("index.jsp").forward(request, response);
+			if (q.getResultList() != null) {
+				if (topics.isEmpty()) {
+					request.setAttribute("message", "No topic found with name: " + oldVal + "!");
+				}
+				for (Topic topic : topics) {
+					Query q2 = em.createNamedQuery("Faq.findAll"); // query to be be executed according to the
+																	// setParameter
+					q2.setParameter("id", topic.getTopicId()); // pass the value from the first result
+					List<Faq> faqs = q2.getResultList(); // all final results are here, then this should be showed on
+															// the index.jsp
+					if (faqs.isEmpty()) {
+						request.setAttribute("message", "No faq found under a topic like: " + topic.getTopicName() + "!");
+					}
+					request.setAttribute("faqs", faqs);
+				}
 			}
 		}
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 }
